@@ -10,6 +10,10 @@ import (
 
 type Entry struct{ Name, Surname, Tel string }
 
+const (
+	max = 26
+)
+
 var (
 	data = []Entry{}
 )
@@ -34,8 +38,8 @@ func list() {
 func getString(n int) string {
 	rs := ""
 	for i := 0; i < n; i++ {
-		startChar := 65
-		random := rand2.Intn(25)
+		startChar := 'A'
+		random := rand2.Intn(max)
 		char := string(uint8(startChar) + uint8(random))
 		rs += char
 	}
@@ -66,6 +70,7 @@ func main() {
 	}
 
 	populate(100)
+	fmt.Printf("Data has %d entries.\n", len(data))
 
 	// Differentiate between the commands
 	switch arguments[1] {
