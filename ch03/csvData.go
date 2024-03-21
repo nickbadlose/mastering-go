@@ -37,7 +37,7 @@ func readCSVFile(filepath string) ([][]string, error) {
 	return lines, nil
 }
 
-func saveCSVFile(filepath string) error {
+func saveCSVFile(filepath string, delimiter rune) error {
 	csvFile, err := os.Create(filepath)
 	if err != nil {
 		return err
@@ -46,7 +46,7 @@ func saveCSVFile(filepath string) error {
 
 	csvWriter := csv.NewWriter(csvFile)
 	// changing the default field delimiter to tab
-	csvWriter.Comma = '\t'
+	csvWriter.Comma = rune(delimiter)
 	for _, row := range myData {
 		temp := []string{row.Name, row.Surname, row.Number, row.LastAccess}
 		err = csvWriter.Write(temp)
@@ -64,13 +64,21 @@ func saveCSVFile(filepath string) error {
 }
 
 func main() {
-	if len(os.Args) != 3 {
-		fmt.Println("csvData input output!")
+	if len(os.Args) != 4 {
+		fmt.Println("csvData input output delimiter!")
 		return
 	}
 
 	input := os.Args[1]
 	output := os.Args[2]
+
+	if len(os.Args[3]) != 1 {
+		fmt.Println("delimiter should be one character only!")
+		return
+	}
+
+	delimiter := os.Args[3][0]
+
 	lines, err := readCSVFile(input)
 	if err != nil {
 		fmt.Println(err)
@@ -89,7 +97,7 @@ func main() {
 		fmt.Println(temp)
 	}
 
-	err = saveCSVFile(output)
+	err = saveCSVFile(output, rune(delimiter))
 	if err != nil {
 		fmt.Println(err)
 		return
