@@ -6,6 +6,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -13,14 +14,26 @@ import (
 
 type Entry struct{ Name, Surname, Tel, LastAccess string }
 
+type phonebook []Entry
+
 const (
-	filepath = "/Users/nick/projects/mastering-go/phonebook/records.data"
+	cfgPhonebook = "PHONEBOOK"
 )
 
 var (
-	data  = []Entry{}
-	index = map[string]int{}
+	data     = phonebook{}
+	index    = map[string]int{}
+	filepath = "/Users/nick/projects/mastering-go/phonebook/records.data"
 )
+
+func (p phonebook) Len() int { return len(p) }
+func (p phonebook) Less(i, j int) bool {
+	if p[i].Surname == p[j].Surname {
+		return p[i].Name < p[j].Name
+	}
+	return p[i].Surname < p[j].Surname
+}
+func (p phonebook) Swap(i, j int) { p[i], p[j] = p[j], p[i] }
 
 func search(key string) *Entry {
 	i, ok := index[key]
@@ -33,6 +46,7 @@ func search(key string) *Entry {
 }
 
 func list() {
+	sort.Sort(data)
 	for _, entry := range data {
 		fmt.Println(entry)
 	}
@@ -130,12 +144,10 @@ func deleteEntry(key string) error {
 	return saveCSVFile()
 }
 
-func main() {
-	arguments := os.Args
-	if len(arguments) == 1 {
-		exe := path.Base(arguments[0])
-		fmt.Printf("Usage: %s search|list <arguments>\n", exe)
-		return
+func setCSVFile() error {
+	fp := os.Getenv(cfgPhonebook)
+	if fp != "" {
+		filepath = fp
 	}
 
 	_, err := os.Stat(filepath)
@@ -146,7 +158,7 @@ func main() {
 		if err != nil {
 			f.Close()
 			fmt.Println(err)
-			return
+			return err
 		}
 		f.Close()
 	}
@@ -156,7 +168,23 @@ func main() {
 	mode := fileInfo.Mode()
 	if !mode.IsRegular() {
 		fmt.Println(filepath, "not a regular file!")
+		return fmt.Errorf("%s is not a regular file", filepath)
+	}
+
+	return nil
+}
+
+func main() {
+	arguments := os.Args
+	if len(arguments) == 1 {
+		exe := path.Base(arguments[0])
+		fmt.Printf("Usage: %s search|list <arguments>\n", exe)
 		return
+	}
+
+	err := setCSVFile()
+	if err != nil {
+		panic(err)
 	}
 
 	err = readCSVFile()
