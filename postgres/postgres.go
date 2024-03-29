@@ -51,13 +51,13 @@ func exists(username string) (int, error) {
 		return 0, err
 	}
 
-	rows, err := db.Query(`SELECT "id" FROM "users" WHERE username = ?`, username)
+	rows, err := db.Query(`SELECT "id" FROM "users" WHERE username = $1`, username)
 	if err != nil {
 		return 0, err
 	}
 	defer rows.Close()
 
-	userID := -1
+	userID := 0
 	for rows.Next() {
 		sErr := rows.Scan(&userID)
 		if sErr != nil {
@@ -120,7 +120,7 @@ func DeleteUSer(id int) error {
 		return err
 	}
 
-	rows, err := db.Query(`SELECT "username" FROM "users" WHERE id = ?`, id)
+	rows, err := db.Query(`SELECT "username" FROM "users" WHERE id = $1`, id)
 	if err != nil {
 		return err
 	}
@@ -143,12 +143,12 @@ func DeleteUSer(id int) error {
 		return errors.New("user does not exist")
 	}
 
-	_, err = db.Exec(`DELETE FROM "userdata" WHERE id = ?`, id)
+	_, err = db.Exec(`DELETE FROM "userdata" WHERE userid = $1`, id)
 	if err != nil {
 		return err
 	}
 
-	_, err = db.Exec(`DELETE FROM "users" WHERE id = ?`, id)
+	_, err = db.Exec(`DELETE FROM "users" WHERE id = $1`, id)
 	if err != nil {
 		return err
 	}

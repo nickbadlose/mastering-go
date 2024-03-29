@@ -1,2 +1,8 @@
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
 github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
+github.com/nickbadlose/mastering-go-3rd v0.0.0-20240329163202-0871ecb11c18 h1:c4t3JtkACC0QZtaPNLPYUw8eyoZmxqST67PIs4VWwWk=
+github.com/nickbadlose/mastering-go-3rd v0.0.0-20240329163202-0871ecb11c18/go.mod h1:5oGdsDcaL/D6YhFnhsnMhQGeEeqGPGzdcCGjz0e36Ro=
+github.com/nickbadlose/mastering-go-3rd v0.0.0-20240329163505-72dae378d5c8 h1:Yl20d0hARxi8/utU+N/Wprgk4nPyTmRTY8fk3CIUMZA=
+github.com/nickbadlose/mastering-go-3rd v0.0.0-20240329163505-72dae378d5c8/go.mod h1:Bj+ppk8spzHKZxdbZ+7/5ajGbzG7hRAKl1LdXWsN/Yc=
+github.com/nickbadlose/mastering-go/postgres v0.0.0-20240329153909-4fc314abaa88 h1:xqsSFZNZ+cqumzm63Dm6Me3FsUPY5GvTmHpWFQo0B6w=
+github.com/nickbadlose/mastering-go/postgres v0.0.0-20240329153909-4fc314abaa88/go.mod h1:1yEq+Gkbc5P4Zjyg3e4jGsKW3IjbGAOhFwWyk51gefI=
