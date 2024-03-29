@@ -19,7 +19,7 @@ jobs:
           IMAGE_NAME: gopost
         run: |
           docker images
-          docker build -t "$IMAGE_NAME" .
+          docker build -t "$IMAGE_NAME" ./ch05
           docker images
           echo "$PASSWORD" | docker login --username "$USERNAME" --password-stdin
           docker tag "${IMAGE_NAME}" "$USERNAME/${IMAGE_NAME}:latest"
