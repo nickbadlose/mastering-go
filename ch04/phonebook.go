@@ -326,6 +326,7 @@ func main() {
 			return
 		}
 		rv := reflect.ValueOf(temp)
+		fmt.Println(rv.Type().String())
 		if rv.Kind() == reflect.Ptr {
 			fmt.Println(rv.Elem().Interface())
 		} else {
