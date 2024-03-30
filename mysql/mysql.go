@@ -27,7 +27,7 @@ type User struct {
 
 func openConnection() (*sql.DB, error) {
 	conn := fmt.Sprintf(
-		"%s:%s@%s:%s/%s",
+		"%s:%s@%s:%d/%s",
 		Username,
 		Password,
 		Hostname,
