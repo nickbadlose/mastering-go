@@ -1,2 +1,3 @@
-postgres/postgres/*
-mysql/mysql/*
+postgres/postgres
+mysql/mysql
+.idea
