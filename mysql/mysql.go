@@ -51,7 +51,7 @@ func exists(username string) (int, error) {
 		return 0, err
 	}
 
-	rows, err := db.Query(`SELECT id FROM users WHERE username = $1`, username)
+	rows, err := db.Query(`SELECT id FROM users WHERE username = ?`, username)
 	if err != nil {
 		return 0, err
 	}
@@ -90,7 +90,7 @@ func AddUser(d *User) (int, error) {
 		return 0, err
 	}
 
-	insertStatement := `insert into users (username) values ($1)`
+	insertStatement := `insert into users (username) values (?)`
 	_, err = db.Exec(insertStatement, d.Username)
 	if err != nil {
 		return 0, err
@@ -101,7 +101,7 @@ func AddUser(d *User) (int, error) {
 		return 0, err
 	}
 
-	insertStatement = `insert into userdata (userid, name, surname, description) values ($1, $2, $3, $4)`
+	insertStatement = `insert into userdata (userid, name, surname, description) values (?, ?, ?, ?)`
 	_, err = db.Exec(insertStatement, userID, d.Name, d.Surname, d.Description)
 	if err != nil {
 		return 0, err
@@ -120,7 +120,7 @@ func DeleteUSer(id int) error {
 		return err
 	}
 
-	rows, err := db.Query(`SELECT username FROM users WHERE id = $1`, id)
+	rows, err := db.Query(`SELECT username FROM users WHERE id = ?`, id)
 	if err != nil {
 		return err
 	}
@@ -143,12 +143,12 @@ func DeleteUSer(id int) error {
 		return errors.New("user does not exist")
 	}
 
-	_, err = db.Exec(`DELETE FROM userdata WHERE userid = $1`, id)
+	_, err = db.Exec(`DELETE FROM userdata WHERE userid = ?`, id)
 	if err != nil {
 		return err
 	}
 
-	_, err = db.Exec(`DELETE FROM users WHERE id = $1`, id)
+	_, err = db.Exec(`DELETE FROM users WHERE id = ?`, id)
 	if err != nil {
 		return err
 	}
@@ -204,7 +204,7 @@ func UpdateUser(u *User) error {
 	}
 
 	_, err = db.Exec(
-		`UPDATE userdata SET name=$1, surname=$2, description=$3 WHERE userid=$4`,
+		`UPDATE userdata SET name=?, surname=?, description=? WHERE userid=?`,
 		u.Name,
 		u.Surname,
 		u.Description,
