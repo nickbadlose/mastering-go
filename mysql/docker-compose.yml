@@ -1,0 +1,23 @@
+version: '3'
+services:
+  mysql:
+    image: mysql
+    container_name: mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_USER=nickbadlose
+      - MYSQL_PASSWORD=pass
+      - MYSQL_DATABASE=go
+    volumes:
+      - ./mysql:/var/lib/mysql/
+    networks:
+      - mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  mysql:
+
+networks:
+  mysql:
+    driver: bridge
