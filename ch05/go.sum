@@ -1,4 +1,10 @@
+filippo.io/edwards25519 v1.1.0 h1:FNf4tywRC1HmFuKW5xopWpigGjJKiJSV0Cqo0cJWDaA=
+filippo.io/edwards25519 v1.1.0/go.mod h1:BxyFTGdWcka3PhytdK4V28tE5sGfRvvvRV7EaN4VDT4=
+github.com/go-sql-driver/mysql v1.8.1 h1:LedoTUt/eveggdHS9qUFC1EFSa8bU2+1pZjSRpvNJ1Y=
+github.com/go-sql-driver/mysql v1.8.1/go.mod h1:wEBSXgmK//2ZFJyE+qWnIsVGmvmEKlqwuVSjsCm7DZg=
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
 github.com/lib/pq v1.10.9/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
-github.com/nickbadlose/mastering-go/postgres v0.0.0-20240329183958-b89a1c2d8dd1 h1:dwah5Ez/DtONToasBHN7OzPjbgAiQXcbmAFhwqvEFjI=
-github.com/nickbadlose/mastering-go/postgres v0.0.0-20240329183958-b89a1c2d8dd1/go.mod h1:1yEq+Gkbc5P4Zjyg3e4jGsKW3IjbGAOhFwWyk51gefI=
+github.com/nickbadlose/mastering-go/mysql v0.0.0-20240330012205-a364f146826d h1:rD3RtzUx+hj7YSpJqBSdzrbhxo1ISxVnQOIMO7UvqY4=
+github.com/nickbadlose/mastering-go/mysql v0.0.0-20240330012205-a364f146826d/go.mod h1:QB7UZe67H2GjdyGnAxTNn0pksePlSpMO5vrqX9T3gP0=
+github.com/nickbadlose/mastering-go/postgres v0.0.0-20240329220109-29dc61c87ce5 h1:Kl52QzTQqw0am2riwWsb+qJWxs3+4+FJuD7CohC86Qw=
+github.com/nickbadlose/mastering-go/postgres v0.0.0-20240329220109-29dc61c87ce5/go.mod h1:1yEq+Gkbc5P4Zjyg3e4jGsKW3IjbGAOhFwWyk51gefI=

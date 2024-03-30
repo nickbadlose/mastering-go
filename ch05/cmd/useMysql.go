@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"github.com/nickbadlose/mastering-go/mysql"
-	"math/rand"
 )
 
 func main() {
