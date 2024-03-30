@@ -4,7 +4,7 @@ go 1.21.6
 
 require (
 	github.com/lib/pq v1.10.9
-	github.com/nickbadlose/mastering-go/mysql v0.0.0-20240330014156-531aa6283347
+	github.com/nickbadlose/mastering-go/mysql v0.0.0-20240330014413-60127f15a82d
 	github.com/nickbadlose/mastering-go/postgres v0.0.0-20240329220109-29dc61c87ce5
 )
 

@@ -29,7 +29,7 @@ func getString(length int64) string {
 }
 
 func main() {
-	mysql.Hostname = "127.0.0.1"
+	mysql.Hostname = "localhost"
 	mysql.Port = 3306
 	mysql.Username = "nickbadlose"
 	mysql.Password = "pass"
