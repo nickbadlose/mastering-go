@@ -1,0 +1,30 @@
+# Move to workflows to use. This stops workflow triggering and failing
+name: Go + PostgreSQL
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v4
+        with:
+          stable: 'false'
+          go-version: '1.21.1'
+
+      - name: Publiish Docker Image
+        if: false
+        env:
+          USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          IMAGE_NAME: gopost
+        run: |
+          docker images
+          docker build -t "$IMAGE_NAME" ./ch05
+          docker images
+          echo "$PASSWORD" | docker login --username "$USERNAME" --password-stdin
+          docker tag "${IMAGE_NAME}" "$USERNAME/${IMAGE_NAME}:latest"
+          docker push "$USERNAME/${IMAGE_NAME}:latest"
+          echo "* Running Docker Image"
+          docker run ${IMAGE_NAME}:latest
