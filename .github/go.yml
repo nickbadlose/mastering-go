@@ -14,7 +14,6 @@ jobs:
           go-version: '1.21.1'
 
       - name: Publiish Docker Image
-        if: false
         env:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
