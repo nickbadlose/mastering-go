@@ -68,7 +68,7 @@ func main() {
 		panic(err)
 	}
 
-	if fileInfo.Mode() == os.ModeIrregular {
+	if !fileInfo.Mode().IsRegular() {
 		panic("not a regular file")
 	}
 
