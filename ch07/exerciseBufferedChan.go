@@ -8,6 +8,8 @@ import (
 	"io"
 	"os"
 	"regexp"
+	"runtime"
+	"sync"
 )
 
 var (
@@ -15,6 +17,8 @@ var (
 	countBytes      bool
 	countCharacters bool
 	countLines      bool
+
+	maxProcs = runtime.GOMAXPROCS(0)
 )
 
 func count(fp string) (lineCount, wordCount, characterCount, byteCount int, err error) {
@@ -87,6 +91,15 @@ func printCounts(lineCount, wordCount, characterCount, byteCount int, descriptor
 	}
 }
 
+type counter struct{ lineCount, wordCount, characterCount, byteCount int }
+
+func limitWorkers(n int) int {
+	if n < maxProcs {
+		return n
+	}
+	return maxProcs
+}
+
 func main() {
 	if len(os.Args) < 2 {
 		panic("Usage: file")
@@ -107,29 +120,62 @@ func main() {
 
 	filePaths := getFiles(os.Args[1:])
 
-	var totalLineCount, totalWordCount, totalCharacterCount, totalByteCount int
+	wg := sync.WaitGroup{}
+	fileChan := make(chan string, len(filePaths))
+	countChan := make(chan *counter, len(filePaths))
+
+	for i := 0; i < limitWorkers(5); i++ {
+		wg.Add(1)
+
+		go func() {
+			defer wg.Done()
+			for fp := range fileChan {
+				fileInfo, err := os.Stat(fp)
+				if err != nil {
+					panic(err)
+				}
+
+				if !fileInfo.Mode().IsRegular() {
+					panic("not a regular file")
+				}
+
+				lineCount, wordCount, characterCount, byteCount, err := count(fp)
+				if err != nil {
+					panic(err)
+				}
+
+				printCounts(lineCount, wordCount, characterCount, byteCount, fp)
+
+				countChan <- &counter{
+					lineCount:      lineCount,
+					wordCount:      wordCount,
+					characterCount: characterCount,
+					byteCount:      byteCount,
+				}
+			}
+		}()
+	}
+
 	for _, filepath := range filePaths {
-		fileInfo, err := os.Stat(filepath)
-		if err != nil {
-			panic(err)
-		}
+		fileChan <- filepath
+	}
+	close(fileChan)
 
-		if !fileInfo.Mode().IsRegular() {
-			panic("not a regular file")
-		}
+	go func() {
+		wg.Wait()
+		close(countChan)
+	}()
 
-		lineCount, wordCount, characterCount, byteCount, err := count(filepath)
-		if err != nil {
-			panic(err)
-		}
-		totalLineCount += lineCount
-		totalWordCount += wordCount
-		totalCharacterCount += characterCount
-		totalByteCount += byteCount
-		printCounts(lineCount, wordCount, characterCount, byteCount, filepath)
+	var totalLineCount, totalWordCount, totalCharacterCount, totalByteCount int
+	for c := range countChan {
+		totalLineCount += c.lineCount
+		totalWordCount += c.wordCount
+		totalCharacterCount += c.characterCount
+		totalByteCount += c.byteCount
 	}
 
 	if len(filePaths) > 1 {
 		printCounts(totalLineCount, totalWordCount, totalCharacterCount, totalByteCount, "total")
 	}
+
 }
