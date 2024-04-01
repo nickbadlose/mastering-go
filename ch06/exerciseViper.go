@@ -10,6 +10,13 @@ import (
 	"regexp"
 )
 
+var (
+	countWords      bool
+	countBytes      bool
+	countCharacters bool
+	countLines      bool
+)
+
 func count(fp string) (lineCount, wordCount, characterCount, byteCount int, err error) {
 	f, err := os.Open(fp)
 	if err != nil {
@@ -43,40 +50,20 @@ func count(fp string) (lineCount, wordCount, characterCount, byteCount int, err 
 	return
 }
 
-func main() {
-	if len(os.Args) < 2 {
-		panic("Usage: file")
+func getFiles(args []string) []string {
+	files := make([]string, 0, 1)
+	for _, arg := range args {
+		if arg == "--w" || arg == "--c" || arg == "--m" || arg == "--l" {
+			continue
+		}
+
+		files = append(files, arg)
 	}
 
-	pflag.Bool("w", false, "Count words")
-	pflag.Bool("c", false, "Count bytes")
-	pflag.Bool("m", false, "Count characters")
-	pflag.Bool("l", false, "Count lines")
+	return files
+}
 
-	pflag.Parse()
-	viper.BindPFlags(pflag.CommandLine)
-
-	countWords := viper.GetBool("w")
-	countBytes := viper.GetBool("c")
-	countCharacters := viper.GetBool("m")
-	countLines := viper.GetBool("l")
-
-	filepath := os.Args[1]
-
-	fileInfo, err := os.Stat(filepath)
-	if err != nil {
-		panic(err)
-	}
-
-	if !fileInfo.Mode().IsRegular() {
-		panic("not a regular file")
-	}
-
-	lineCount, wordCount, characterCount, byteCount, err := count(filepath)
-	if err != nil {
-		panic(err)
-	}
-
+func printCounts(lineCount, wordCount, characterCount, byteCount int, descriptor string) {
 	if countLines {
 		fmt.Printf("\t%d", lineCount)
 	}
@@ -94,8 +81,55 @@ func main() {
 	}
 
 	if !countLines && !countWords && !countCharacters && !countBytes {
-		fmt.Printf("\t%d\t%d\t%d\t%d\t%s\n", lineCount, wordCount, characterCount, byteCount, filepath)
+		fmt.Printf("\t%d\t%d\t%d\t%d\t%s\n", lineCount, wordCount, characterCount, byteCount, descriptor)
 	} else {
-		fmt.Printf("\t%s\n", filepath)
+		fmt.Printf("\t%s\n", descriptor)
+	}
+}
+
+func main() {
+	if len(os.Args) < 2 {
+		panic("Usage: file")
+	}
+
+	pflag.Bool("w", false, "Count words")
+	pflag.Bool("c", false, "Count bytes")
+	pflag.Bool("m", false, "Count characters")
+	pflag.Bool("l", false, "Count lines")
+
+	pflag.Parse()
+	viper.BindPFlags(pflag.CommandLine)
+
+	countWords = viper.GetBool("w")
+	countBytes = viper.GetBool("c")
+	countCharacters = viper.GetBool("m")
+	countLines = viper.GetBool("l")
+
+	filePaths := getFiles(os.Args[1:])
+
+	var totalLineCount, totalWordCount, totalCharacterCount, totalByteCount int
+	for _, filepath := range filePaths {
+		fileInfo, err := os.Stat(filepath)
+		if err != nil {
+			panic(err)
+		}
+
+		if !fileInfo.Mode().IsRegular() {
+			panic("not a regular file")
+		}
+
+		lineCount, wordCount, characterCount, byteCount, err := count(filepath)
+		if err != nil {
+			panic(err)
+		}
+		totalLineCount += lineCount
+		totalWordCount += wordCount
+		totalCharacterCount += characterCount
+		totalByteCount += byteCount
+		printCounts(lineCount, wordCount, characterCount, byteCount, filepath)
+	}
+
+	if len(filePaths) > 1 {
+		printCounts(totalLineCount, totalWordCount, totalCharacterCount, totalByteCount, "total")
 	}
 }
